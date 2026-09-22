@@ -56,7 +56,7 @@ end. The gap between the two is the lecture. -->
 
 ## A question you already know the answer to
 
-You type a function name. It writes the body.
+You type a function name. The AI llm writes the body.
 
 <!-- no-parse -->
 ```python
@@ -138,7 +138,7 @@ the context is the only steering. -->
 * It cannot tell you what it does not know, because it does not know that
   it does not know
 
-- Change the context and you change the output. That is your entire
+* Change the context and you change the output. That is your entire
   steering wheel
 
 ---
@@ -358,7 +358,7 @@ engineering directly, and the lab has them run both prompts. -->
 We accept anything with an @ and a dot after it — we deliberately do NOT
 want RFC 5322 compliance. Reject anything over 254 characters.</p>
 
-* Same tool. Same model. **Same day.**
+- Same tool. Same model. **Same day.**
 
 ---
 
@@ -453,6 +453,60 @@ mechanism in part 2. -->
 The uncomfortable finding: developers often report feeling faster on tasks
 where measurement says they were not. **Perceived** speed and **actual**
 speed come apart.
+
+</div>
+
+---
+
+<!-- Speaker notes: ~0:50. The model is not the whole product. ChatGPT and
+Claude add training, system instructions, retrieval, citations, and refusal
+behaviour around the predictor. These layers can make an unsupported answer
+less likely, but they do not turn generated text into verified fact.
+
+OpenAI's public material says hallucinations remain a problem and describes
+search and deep research as reducing, not eliminating, errors. Anthropic's
+guidance recommends allowing uncertainty, grounding in supplied documents,
+using direct quotes, and verifying with citations. Keep the distinction
+between a useful signal and a guarantee explicit. -->
+
+## What ChatGPT and Claude add
+
+| Product layer | How it fights hallucination | What it cannot promise |
+|---|---|---|
+| **ChatGPT** | Search or deep research can add current sources and citations | A source can be weak, misread, or cited for a claim it does not support |
+| **Claude** | Uncertainty training, document grounding, quotes, and citations can make gaps visible | It can still answer fluently when the evidence is missing |
+
+<div class="callout">
+
+Both products are trying to **change the odds**, not replace the check.
+
+</div>
+
+* Retrieval adds evidence to the context; it does not change the predictor
+* A refusal or an **I don't know** is useful behaviour, not proof that the
+  system knows its own limits
+
+---
+
+<!-- Speaker notes: ~0:52. This is the practical prompt to leave the room
+with. The important move is not just "be honest"; it is to define what counts
+as evidence and what to do when evidence is absent. Cite the source, then
+check that the source really supports the claim. A model can follow this
+instruction and still fail, so verification remains outside the answer. -->
+
+## Ask for "I don't know" properly
+
+<p class="prompt good">Answer only from the evidence provided or from sources you can cite. If the evidence is insufficient, say "I don't know" or "I don't have enough information." Separate verified facts from inferences. Do not fill gaps with plausible details.</p>
+
+* **Give it a boundary:** use only this document, these sources, or a named
+  tool
+* **Give it an escape:** say what to do when the evidence is insufficient
+* **Give it a check:** cite the source, quote the supporting passage, or run
+  the test
+
+<div class="callout">
+
+You can make **"I don't know" more likely**. You cannot make it a guarantee.
 
 </div>
 
