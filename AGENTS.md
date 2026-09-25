@@ -55,8 +55,10 @@ withholding — by teaching while you help:
 (`week01` … `week12`, plus `week06b-reading-week`), listed with links in
 `lectures-and-labs/README.md`. A week's lecture is `<topic>-lecture.md`
 (Marp markdown — the teaching is in the prose, the fenced code, and the
-`<!-- Speaker notes: ... -->` comments); its lab is `<topic>_lab/README.md`
-beside the code the student edits. A rendered, easier-to-read version of
+`<!-- Speaker notes: ... -->` comments), or a PowerPoint deck,
+`<topic>-lecture.pptx`, whose every slide and speaker note is also in
+`<topic>-lecture.notes.md` beside it: read that one. Its lab is
+`<topic>_lab/README.md` beside the code the student edits. A rendered, easier-to-read version of
 everything is at https://danielcregg.is-a.dev/ai-assisted-programming/.
 
 **Their work is theirs.** Edit the files they are working in. Leave decks,
@@ -90,7 +92,9 @@ that sign-in lives in the agent's own configuration, never in the repo.
   `weekNNb-reading-week`, right after week NN, so it sorts in place). A
   teaching week holds `<topic>-lecture.md` (the Marp deck, THE canonical
   lecture; `<topic>` is the row's `lecture` name, which is also the deck's
-  site address) and, in a lab week, `<topic>_lab/` (the row's `lab` name
+  site address), or instead a PowerPoint deck `<topic>-lecture.pptx` with
+  its generated `.pdf` and `.notes.md` (see "PowerPoint lectures" below),
+  and, in a lab week, `<topic>_lab/` (the row's `lab` name
   with hyphens as underscores, so it is an importable Python package
   name): `README.md` (the instructions students follow) plus the starter
   code. MCQ weeks and the reading week hold only a `README.md` explainer.
@@ -287,6 +291,37 @@ cohorts.
   what another lecturer swaps) but is held to the identity rule like every
   other deck. `check_deck_portability.py` enforces both.
 
+### PowerPoint lectures (a pilot since September 2026: the overview lecture)
+
+A week may be taught from a PowerPoint deck instead of a Marp one,
+`<topic>-lecture.pptx` (the module owner builds them with the
+powerpoint-maker skill: the stock Office look, code in dark
+syntax-coloured boxes, every bullet revealed on click). Everything above
+about content still holds (the deck flow below, portability, notes written
+for an AI first, the misconception on every Predict slide), with the
+notes in PowerPoint's notes pane.
+
+CI runs on Linux and cannot open a deck, so two files are generated beside
+it on Windows and committed with it. Neither is ever edited by hand:
+
+- `<topic>-lecture.pdf`: the slides exactly as PowerPoint prints them. The
+  site shows it.
+- `<topic>-lecture.notes.md`: every slide's text and speaker notes as
+  markdown in the shape of a Marp deck. The snippet, notes and portability
+  gates read it, the site prints it under the PDF, and it is what an
+  assistant should read to learn what the lecture says.
+
+`python scripts/export_decks.py` writes both (with the deck closed:
+PowerPoint locks a deck it has open). The text copy records the SHA-256 of
+the deck, of the PDF and of its own text, and `check_schedule.py` fails
+when any of them stops matching: a deck saved since its export, or a text
+copy edited by hand. A code box's alt text names its language
+(`Code, python`); add `, no-parse` to exempt a deliberately incomplete
+snippet, as `<!-- no-parse -->` does above a fence. The lecture's page on
+the site shows the PDF, a download of the deck, a link to Microsoft's web
+viewer (experimental: Microsoft does not support it for production use),
+and every slide's text with its notes.
+
 ### Deck flow — every topic deck, same shape
 
 Lectures are **two-hour** slots. The shape mirrors the sibling OOC module
@@ -353,16 +388,80 @@ that matters is the fraction of DIY steps asking the student to *do or
 write something themselves* rather than copy a supplied fence. When a lab
 runs long, cut transcription before you cut exercises.
 
-**Why the deliverable differs from OOC.** OOC labs produce console output,
-so `**Expected output**` can be exact text. Many AIAP tasks produce a
-written artefact instead — a prompt, an audit, a comparison — which is why
-`**What you should have**` exists. Use whichever the exercise actually
-produces; never omit both, or the student has no way to self-check.
+**Why the self-check block differs from OOC.** OOC labs produce console
+output, so `**Expected output**` can be exact text. Many AIAP steps end in
+something on screen that is not console output — a chat answer, a diff, a
+table a shipped script printed — which is why `**What you should have**`
+exists. It describes what the student should be looking at by the end of
+the DIY, so they can tell they are on track. It is never a file to hand
+in: nothing in a lab is submitted (see below). Use whichever the exercise
+actually produces; never omit both, or the student has no way to
+self-check.
+
+### How a lab is delivered — tasks, not write-ups
+
+The setup lab (`lectures-and-labs/week02/setup_lab/`) is the worked
+example.
+
+- **Where it runs.** In the student's own private template copy, in a
+  Codespace built from the root `.devcontainer/` (Debian, Python 3.12,
+  Node 22, `gh` signed in, Copilot Chat installed), usually in the
+  browser. So a lab may assume Linux commands, network access and a
+  signed-in Copilot, and must not assume anything else about the machine.
+  In a browser the browser owns some shortcuts — `Ctrl+W`, `Ctrl+N`,
+  `Ctrl+T` and any chord ending in them — so instructions use the menus,
+  the right-click menu or the Command Palette instead. `Ctrl+Alt+I` (the
+  chat panel) and `Ctrl+I` (inline chat) are safe.
+- **Nothing is submitted and nothing is corrected.** The 4% Practical
+  Assessment on Moodle is the only assessed piece of a lab week. A lab
+  therefore never asks for a file, table or note "to hand in", and never
+  says "record", "write down" or "for submission".
+- **Tasks, not reflection.** A lab is built from tasks with visible
+  results, not from reflection tables or write-ups. Every DIY step is a
+  prompt to type, a command to run, or something to look at. No
+  reflection tables, no `REFLECTION.md`. When the point needs a
+  comparison, ship a script that makes it (the setup lab's
+  `email_check.py` runs every validator the student got against the same
+  awkward addresses and counts where they disagree) rather than asking
+  the student to compare by eye and write it down. When a lab runs
+  short, extend a task rather than adding a write-up: the same prompt
+  put to two or three other models from the model picker, framed as a
+  hunt ("which one can you catch out?"), is the cheapest extension.
+- **Surprises that teach either way.** Model behaviour moves every few
+  months, so a DIY must land whichever way the model behaves — anchor it
+  on something the student checks themselves (`hasattr`, `wc -l`,
+  running the file, a shipped harness) rather than on the model failing.
+  A lab that depends on the model failing has a shelf life.
+- **Say which chat mode, every time — and know there is no no-tools
+  mode.** In a Codespace the Copilot chat offers **Interactive** (reads
+  freely, asks before it runs a command or changes a file), **Plan**
+  (read-only) and **Autopilot** (never asks); the "Ask" role that the VS
+  Code docs describe is not offered by the Copilot harness. Every mode
+  can read the workspace, so an answer "from memory" is asked for in the
+  prompt ("without using any tools"), never selected in a picker, and the
+  step watches whether the instruction was obeyed. A step that talks to
+  the assistant names the mode and says when to start a fresh
+  conversation.
+- **The why lives in the hint, short.** Steps stay bare and imperative;
+  the mechanism behind the surprise goes in the `<details>` hint, a
+  paragraph or two, so a student who wants it has it and one who does not
+  is not made to sit through it.
+- **Sized to two hours.** Let the exercises run to about 110 minutes
+  including Codespace start-up.
+
+Labs written before this rule (prompting, agents, vibe-coding) still carry
+`REFLECTION.md` exercises; bring each into line when it is next edited,
+keeping the formula above and `check_lab_structure.py` green.
 
 ## Editing rules
 
 - To change a lecture: edit its week's `<topic>-lecture.md` and push —
   CI re-renders the deck and republishes the site.
+- To change a PowerPoint lecture: edit the `.pptx` in PowerPoint, close
+  it, run `python scripts/export_decks.py`, and commit the deck with the
+  `.pdf` and `.notes.md` it rewrites. Never edit the `.notes.md`: it is
+  regenerated from the deck, and `check_schedule.py` fails if it was
+  touched.
 - To add a lab: create `<topic>_lab/` in its week's folder with a
   `README.md` to the formula above plus starter code, name it in the row's
   `lab`, and add `"<topic>"` to `CONFORMING` in
@@ -393,7 +492,7 @@ Ten run on every push. Before any push, all must pass:
     python scripts/check_lab_structure.py    # every lab follows the formula
     python scripts/check_deck_portability.py # every deck is liftable to another course
     python scripts/check_speaker_notes.py    # notes are AI-usable; predicts name the misconception
-    python scripts/check_schedule.py         # the schedule is stated once, and every view agrees with it
+    python scripts/check_schedule.py         # the schedule is stated once, every view agrees, pptx exports are current
     python scripts/build_index.py build      # week <-> deck <-> lab structure holds
 
 - `verify_snippets.py` is this repo's replacement for OOC's `javac` gate.

@@ -6,6 +6,9 @@ order. A teaching week's folder holds:
 - **`<topic>-lecture.md`**: that week's lecture slides (for example
   `prompting-lecture.md`). In a Codespace it opens as slides; in VS Code on
   your own computer, install *Marp for VS Code* and open the preview.
+  A week taught from PowerPoint has **`<topic>-lecture.pptx`** instead,
+  with the slides as a PDF (`<topic>-lecture.pdf`) and every slide's text
+  and speaker notes (`<topic>-lecture.notes.md`) beside it.
 - **`<topic>_lab/`**: the lab, with its **`README.md`** (the instructions)
   and the starter code you work in. Your own code goes in that folder too.
 
@@ -16,7 +19,7 @@ happens that week.
 | Week | Topic | Lecture | Lab |
 |---|---|---|---|
 | 1 | Module Introduction | [slides](week01/introduction-lecture.md) | _No labs week 1. Labs start week 2._ |
-| **➡️ 2** | AIAP Overview | [slides](week02/overview-lecture.md) | [lab](week02/setup_lab/README.md) |
+| **➡️ 2** | AIAP Overview | [slides](week02/overview-lecture.pdf) | [lab](week02/setup_lab/README.md) |
 | 3 | Prompting & Context Engineering | [slides](week03/prompting-lecture.md) | [lab](week03/prompting_lab/README.md) |
 | 4 | Retrieval & Grounding | [slides](week04/rag-lecture.md) | [lab](week04/rag_lab/README.md) |
 | 5 | MCP | [slides](week05/mcp-lecture.md) | [lab](week05/mcp_lab/README.md) |
@@ -48,7 +51,10 @@ all semester, and it is the account an employer will look at.
 2. On *your* repo: **Code → Codespaces → Create codespace**.
 3. The devcontainer gives you Python 3.12, Node 22 and the `gh` CLI. There
    is nothing to install, and the Codespace opens on this page.
-4. Open this week's folder and follow the lab's README.
+4. If VS Code asks whether you trust the authors of the files in this
+   folder, choose **Yes**: it is your own copy of the module's files, and
+   nothing in the labs can run in Restricted Mode.
+5. Open this week's folder and follow the lab's README.
 
 Don't *Fork*. A fork of a public repo can never be made private, so your
 work would be world-readable, and the fork network would publish a list of
